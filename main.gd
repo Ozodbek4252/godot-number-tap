@@ -1,28 +1,37 @@
 extends Node2D
-var current_number = 1
+
+const TOTAL_NUMBERS = 5
+var next_number = 1
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	for number in range(1, TOTAL_NUMBERS + 1):
+		create_number_button(number)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func create_number_button(number: int) -> void:
+	var button = Button.new()
 
+	button.text = str(number)
+	button.add_theme_font_size_override("font_size", 48)
+	button.custom_minimum_size = Vector2(100, 100)
 
-func _on_button_pressed() -> void:
-	current_number += 1
-	$Button.text = str(current_number)
-	
 	var screen_size = get_viewport_rect().size
-	var button_size = $Button.size
-	
-	var max_x = screen_size.x - button_size.x
-	var max_y = screen_size.y - button_size.y
-	
-	$Button.position = Vector2(
-		randf_range(0, max_x),
-		randf_range(0, max_y)
+	var button_size = button.custom_minimum_size
+
+	button.position = Vector2(
+		randf_range(0, screen_size.x - button_size.x),
+		randf_range(0, screen_size.y - button_size.y)
 	)
+
+	button.pressed.connect(_on_number_pressed.bind(number, button))
+
+	add_child(button)
+
+
+func _on_number_pressed(number: int, button: Button) -> void:
+	if number != next_number:
+		return
+
+	button.queue_free()
+	next_number += 1
