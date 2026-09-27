@@ -1,4 +1,5 @@
 extends Node2D
+var current_number = 1
 
 
 # Called when the node enters the scene tree for the first time.
@@ -12,4 +13,5 @@ func _process(delta: float) -> void:
 
 
 func _on_button_pressed() -> void:
-	$Button.text = "2"
+	current_number += 1
+	$Button.text = str(current_number)
